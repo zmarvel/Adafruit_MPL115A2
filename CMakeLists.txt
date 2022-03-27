@@ -1,2 +1,3 @@
-idf_component_register(SRCS "mpl115a2.c"
-                    INCLUDE_DIRS "include")
+idf_component_register(SRCS "mpl115a2.cpp"
+                    INCLUDE_DIRS "include"
+                    REQUIRES "i2cdev")
