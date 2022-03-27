@@ -1,5 +1,5 @@
 /*!
- *  @file Adafruit_MPL115A2.cpp
+ *  @file mpl115a2.cpp
  *
  *  @mainpage Driver for the Adafruit MPL115A2 barometric pressure sensor
  *
@@ -29,12 +29,12 @@
  *       - get both P and T with a single call to getPT
  */
 
-#include "Adafruit_MPL115A2.h"
+#include "mpl115a2.h"
 
 /*!
  *  @brief  Gets the factory-set coefficients for this particular sensor
  */
-void Adafruit_MPL115A2::readCoefficients() {
+void MPL115A2::readCoefficients() {
   int16_t a0coeff;
   int16_t b1coeff;
   int16_t b2coeff;
@@ -75,7 +75,7 @@ void Adafruit_MPL115A2::readCoefficients() {
 /*!
  *  @brief  Instantiates a new MPL115A2 class
  */
-Adafruit_MPL115A2::Adafruit_MPL115A2() {
+MPL115A2::MPL115A2() {
   _mpl115a2_a0 = 0.0F;
   _mpl115a2_b1 = 0.0F;
   _mpl115a2_b2 = 0.0F;
@@ -86,16 +86,14 @@ Adafruit_MPL115A2::Adafruit_MPL115A2() {
  *  @brief  Setups the HW (reads coefficients values, etc.)
  *  @return Returns true if the device was found
  */
-bool Adafruit_MPL115A2::begin() {
-  return begin(MPL115A2_DEFAULT_ADDRESS, &Wire);
-}
+bool MPL115A2::begin() { return begin(MPL115A2_DEFAULT_ADDRESS, &Wire); }
 
 /*!
  *  @brief  Setups the HW (reads coefficients values, etc.)
  *  @param  *theWire
  *  @return Returns true if the device was found
  */
-bool Adafruit_MPL115A2::begin(TwoWire *theWire) {
+bool MPL115A2::begin(TwoWire *theWire) {
   return begin(MPL115A2_DEFAULT_ADDRESS, theWire);
 }
 
@@ -104,7 +102,7 @@ bool Adafruit_MPL115A2::begin(TwoWire *theWire) {
  *  @param  addr
  *  @return Returns true if the device was found
  */
-bool Adafruit_MPL115A2::begin(uint8_t addr) { return begin(addr, &Wire); }
+bool MPL115A2::begin(uint8_t addr) { return begin(addr, &Wire); }
 
 /*!
  *  @brief  Setups the HW (reads coefficients values, etc.)
@@ -112,11 +110,11 @@ bool Adafruit_MPL115A2::begin(uint8_t addr) { return begin(addr, &Wire); }
  *  @param  *theWire
  *  @return Returns true if the device was found
  */
-bool Adafruit_MPL115A2::begin(uint8_t addr, TwoWire *theWire) {
+bool MPL115A2::begin(uint8_t addr, TwoWire *theWire) {
   if (_i2c_dev) {
     delete _i2c_dev;
   }
-  _i2c_dev = new Adafruit_I2CDevice(addr, theWire);
+  _i2c_dev = new I2CDevice(addr, theWire);
 
   if (!_i2c_dev->begin()) {
     return false;
@@ -131,7 +129,7 @@ bool Adafruit_MPL115A2::begin(uint8_t addr, TwoWire *theWire) {
  *  @brief  Gets the floating-point pressure level in kPa
  *  @return Pressure in kPa
  */
-float Adafruit_MPL115A2::getPressure() {
+float MPL115A2::getPressure() {
   float pressureComp, centigrade;
 
   getPT(&pressureComp, &centigrade);
@@ -142,7 +140,7 @@ float Adafruit_MPL115A2::getPressure() {
  *  @brief  Gets the floating-point temperature in Centigrade
  *  @return Temperature in Centigrade
  */
-float Adafruit_MPL115A2::getTemperature() {
+float MPL115A2::getTemperature() {
   float pressureComp, centigrade;
 
   getPT(&pressureComp, &centigrade);
@@ -156,7 +154,7 @@ float Adafruit_MPL115A2::getTemperature() {
  *  @param  *T
  *          Pointer to temperature value
  */
-void Adafruit_MPL115A2::getPT(float *P, float *T) {
+void MPL115A2::getPT(float *P, float *T) {
   uint16_t pressure, temp;
   float pressureComp;
 
@@ -180,6 +178,6 @@ void Adafruit_MPL115A2::getPT(float *P, float *T) {
                  _mpl115a2_b2 * temp;
 
   // Return pressure and temperature as floating point values
-  *P = ((65.0F / 1023.0F) * pressureComp) + 50.0F; // kPa
-  *T = ((float)temp - 498.0F) / -5.35F + 25.0F;    // C
+  *P = ((65.0F / 1023.0F) * pressureComp) + 50.0F;  // kPa
+  *T = ((float)temp - 498.0F) / -5.35F + 25.0F;     // C
 }
