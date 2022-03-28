@@ -124,9 +124,10 @@ float MPL115A2::getTemperature() {
  *  @brief  Gets both at once and saves a little time
  */
 MPL115A2::PressureTemperatureSample MPL115A2::getPressureTemperature() {
-  const std::array<uint8_t, 2> cmd{REGISTER_STARTCONVERSION, 0};
-
-  MPL_CHECK(TAG, i2c_dev_write(i2c_dev_, cmd.data(), cmd.size(), nullptr, 0),
+  const auto cmd = REGISTER_STARTCONVERSION;
+  const uint8_t dummy = 0;
+  MPL_CHECK(TAG,
+            i2c_dev_write(i2c_dev_, &cmd, sizeof(cmd), &dummy, sizeof(dummy)),
             {});
 
   // Wait a bit for the conversion to complete (3ms max)
